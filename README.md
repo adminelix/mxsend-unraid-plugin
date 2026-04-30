@@ -9,7 +9,7 @@ Send Unraid system notifications to a Matrix room via [mxsend](https://github.co
 Paste this URL into **Plugins → Install Plugin** in the Unraid WebUI:
 
 ```
-https://raw.githubusercontent.com/adminelix/mxsend-unraid-plugin/main/dist/mxsend.plg
+https://github.com/adminelix/mxsend-unraid-plugin/releases/latest/download/mxsend.plg
 ```
 
 The plugin automatically downloads the required package from the latest GitHub release.

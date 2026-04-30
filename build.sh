@@ -18,7 +18,7 @@ PKG_NAME="${NAME}-${VERSION}-${ARCH}-${BUILD}"
 PKG_FILE="${PKG_NAME}.txz"
 PLG_FILE="${NAME}.plg"
 
-PLUGIN_URL="https://raw.githubusercontent.com/${REPO_NAMESPACE}/${REPO_NAME}/main/dist/${PLG_FILE}"
+PLUGIN_URL="https://github.com/${REPO_NAMESPACE}/${REPO_NAME}/releases/latest/download/${PLG_FILE}"
 PACKAGE_URL="${REPO_URL}/releases/download/v${VERSION}/${PKG_FILE}"
 
 echo "=== Building $NAME plugin v$VERSION ==="
