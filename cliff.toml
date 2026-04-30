@@ -1,0 +1,12 @@
+[changelog]
+header = "# Changelog\n"
+body = ""
+trim = true
+footer = ""
+
+[git]
+conventional_commits = true
+filter_unconventional = false
+commit_preprocessors = [
+  { pattern = "[(]?(#\\d+)[)]?", replace = "", order = 0 },
+]

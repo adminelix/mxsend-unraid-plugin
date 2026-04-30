@@ -1,0 +1,46 @@
+<?xml version='1.0' standalone='yes'?>
+<!DOCTYPE PLUGIN [
+<!ENTITY name         "mxsend">
+<!ENTITY author       "adminelix">
+<!ENTITY version      "0.1.0-snapshot.1">
+<!ENTITY pluginURL    "https://raw.githubusercontent.com/adminelix/mxsend-unraid-plugin/main/dist/mxsend.plg">
+<!ENTITY package      "mxsend-0.1.0-snapshot.1-x86_64-1.txz">
+<!ENTITY packageURL   "https://github.com/adminelix/mxsend-unraid-plugin/releases/download/v0.1.0-snapshot.1/mxsend-0.1.0-snapshot.1-x86_64-1.txz">
+<!ENTITY packageSHA256 "dbda8787c68cf0abab032f5248d9dd920d15441a22bb36404515cc4153a990a7">
+<!ENTITY pluginLOC    "/boot/config/plugins/mxsend">
+]>
+<PLUGIN name="&name;" author="&author;" version="&version;"
+        pluginURL="&pluginURL;"
+        min="6.12.0"
+        support="https://github.com/adminelix/mxsend-unraid-plugin"
+        project="https://github.com/adminelix/mxsend-unraid-plugin">
+
+<CHANGES>
+### &version;
+- Initial release: Matrix notification agent for Unraid
+</CHANGES>
+
+<!-- Pre-install: remove stale package files -->
+<FILE Run="/bin/bash">
+<INLINE>
+rm -f $(ls &pluginLOC;/mxsend-*.txz 2>/dev/null | grep -v '&version;')
+</INLINE>
+</FILE>
+
+<!-- Install Slackware package containing binary, agent XML, and icon -->
+<FILE Name="&pluginLOC;/&package;" Run="upgradepkg --install-new">
+<URL>&packageURL;</URL>
+<SHA256>&packageSHA256;</SHA256>
+</FILE>
+
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+removepkg mxsend-0.1.0-snapshot.1-x86_64-1
+rm -rf &pluginLOC;
+rm -f /boot/config/plugins/dynamix/notifications/agents/Mxsend.sh
+rm -f /boot/config/plugins/dynamix/notifications/agents-disabled/Mxsend.sh
+echo "mxsend plugin removed."
+</INLINE>
+</FILE>
+
+</PLUGIN>

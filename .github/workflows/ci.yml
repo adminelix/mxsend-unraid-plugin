@@ -1,0 +1,108 @@
+name: CI
+
+# Pipeline & release process:
+#
+#   PR → main         check → security → test
+#   Push → main        check → security → test → build
+#   Tag v*             check → security → test → build → release
+#
+# Release: push a tag matching v* (or create a release on GitHub).
+# The PLG + TXZ are built and uploaded as release assets.
+# Tag example: git tag v0.1.0 && git push origin v0.1.0
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Shell syntax check
+        run: bash -n build.sh
+      - name: Validate source structure
+        run: |
+          test -f source/usr/local/bin/mxsend
+          test -f source/usr/local/emhttp/plugins/dynamix/agents/Mxsend.xml
+          test -f source/install/slack-desc
+
+  security:
+    needs: [check]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: Lint build.sh
+        run: shellcheck build.sh
+
+  test:
+    needs: [security]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tools
+        run: sudo apt-get update && sudo apt-get install -y xz-utils
+      - name: Build plugin
+        run: ./build.sh
+      - name: Verify TXZ contains expected files
+        run: |
+          tar -tJf dist/*.txz | grep 'usr/local/bin/mxsend'
+          tar -tJf dist/*.txz | grep 'usr/local/emhttp/plugins/dynamix/agents/Mxsend.xml'
+          tar -tJf dist/*.txz | grep 'install/slack-desc'
+      - name: Verify PLG is valid XML
+        run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('dist/mxsend.plg')"
+      - name: Verify PLG references correct SHA256
+        run: |
+          PKG_SHA256=$(sha256sum dist/*.txz | cut -d' ' -f1)
+          grep -q "$PKG_SHA256" dist/mxsend.plg
+
+  build:
+    if: github.ref_type == 'tag' || github.ref_name == 'main'
+    needs: [check, security, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tools
+        run: sudo apt-get update && sudo apt-get install -y xz-utils
+      - name: Set version from tag
+        if: github.ref_type == 'tag'
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+      - name: Build plugin
+        run: ./build.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  release:
+    needs: [build]
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: orhun/git-cliff-action@v4
+        id: cliff
+        with:
+          config: cliff.toml
+          args: --latest --strip header
+        env:
+          GITHUB_REPO: ${{ github.repository }}
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          body: ${{ steps.cliff.outputs.changelog }}
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          update_release: true

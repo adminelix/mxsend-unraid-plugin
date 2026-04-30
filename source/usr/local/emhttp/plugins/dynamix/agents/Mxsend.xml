@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Agent>
+  <Name>Mxsend</Name>
+  <Variables>
+    <Variable Help="Sender's full Matrix user ID, e.g. @bot:matrix.server.org" Desc="Sender (From)" Default="">FROM</Variable>
+    <Variable Help="Password for the Matrix account" Desc="Password" Default="">PASSWORD</Variable>
+    <Variable Help="Recipient — a room ID (!room:server) or user ID (@user:server)" Desc="Recipient (To)" Default="">TO</Variable>
+    <Variable Help="Recovery key for E2EE device verification (optional)" Desc="Recovery Key (optional)" Default="">RECOVERY_KEY</Variable>
+    <Variable Help="Fields included in the notification title" Desc="Title" Default="$EVENT">TITLE</Variable>
+    <Variable Help="Fields included in the notification message body" Desc="Message" Default="$SUBJECT,$DESCRIPTION">MESSAGE</Variable>
+  </Variables>
+  <Script>
+    <![CDATA[
+    #!/bin/bash
+    ############
+    {0}
+    ############
+    TITLE=$(echo -e "$TITLE")
+    MESSAGE=$(echo -e "$MESSAGE")
+    FULL=""
+    [ -n "$TITLE" ]  && FULL="*[$IMPORTANCE] $TITLE*"
+    [ -n "$MESSAGE" ] && FULL="${FULL}\n\n$MESSAGE"
+    /usr/local/bin/mxsend \
+      --from "$FROM" --password "$PASSWORD" --to "$TO" \
+      ${RECOVERY_KEY:+--recovery-key "$RECOVERY_KEY"} \
+      "$(echo -e "$FULL")"
+    ]]>
+  </Script>
+</Agent>
