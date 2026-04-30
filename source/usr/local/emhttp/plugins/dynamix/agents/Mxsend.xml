@@ -15,15 +15,15 @@
     ############
     {0}
     ############
-    TITLE=$(echo -e "$TITLE")
-    MESSAGE=$(echo -e "$MESSAGE")
+    TITLE=$(printf '%b' "$TITLE")
+    MESSAGE=$(printf '%b' "$MESSAGE")
     FULL=""
     [ -n "$TITLE" ]  && FULL="*[$IMPORTANCE] $TITLE*"
     [ -n "$MESSAGE" ] && FULL="${FULL}\n\n$MESSAGE"
     /usr/local/bin/mxsend \
       --from "$FROM" --password "$PASSWORD" --to "$TO" \
       ${RECOVERY_KEY:+--recovery-key "$RECOVERY_KEY"} \
-      "$(echo -e "$FULL")"
+      "$(printf '%b' "$FULL")"
     ]]>
   </Script>
 </Agent>

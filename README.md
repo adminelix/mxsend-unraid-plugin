@@ -65,7 +65,7 @@ rm -rf /boot/config/plugins/mxsend
 
 ## Building from Source
 
-Requirements: `bash`, `tar`, `xz`, `sha256sum` (or `shasum`)
+Requirements: `bash`, `tar`, `xz`, `curl`, `sha256sum` (or `shasum`)
 
 ```bash
 git clone git@github.com:adminelix/mxsend-unraid-plugin.git

@@ -1,2 +1,5 @@
 .DS_Store
 dist/
+idea/
+/.idea/
+source/usr/local/bin/mxsend

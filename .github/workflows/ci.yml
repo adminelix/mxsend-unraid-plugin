@@ -2,9 +2,9 @@ name: CI
 
 # Pipeline & release process:
 #
-#   PR → main         check → security → test
-#   Push → main        check → security → test → build
-#   Tag v*             check → security → test → build → release
+#   PR → main        check → build
+#   Push → main      check → build
+#   Tag v*           check → build → release
 #
 # Release: push a tag matching v* (or create a release on GitHub).
 # The PLG + TXZ are built and uploaded as release assets.
@@ -25,27 +25,26 @@ jobs:
         run: bash -n build.sh
       - name: Validate source structure
         run: |
-          test -f source/usr/local/bin/mxsend
           test -f source/usr/local/emhttp/plugins/dynamix/agents/Mxsend.xml
           test -f source/install/slack-desc
-
-  security:
-    needs: [check]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
       - name: Install shellcheck
         run: sudo apt-get update && sudo apt-get install -y shellcheck
       - name: Lint build.sh
         run: shellcheck build.sh
+      - name: Lint Mxsend.xml agent script
+        run: |
+          sed -n '/<!\[CDATA\[/,/\]\]>/p' source/usr/local/emhttp/plugins/dynamix/agents/Mxsend.xml | \
+            sed '1d;$d' | shellcheck -s bash -
 
-  test:
-    needs: [security]
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Install tools
         run: sudo apt-get update && sudo apt-get install -y xz-utils
+      - name: Set version from tag
+        if: github.ref_type == 'tag'
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
       - name: Build plugin
         run: ./build.sh
       - name: Verify TXZ contains expected files
@@ -59,20 +58,6 @@ jobs:
         run: |
           PKG_SHA256=$(sha256sum dist/*.txz | cut -d' ' -f1)
           grep -q "$PKG_SHA256" dist/mxsend.plg
-
-  build:
-    if: github.ref_type == 'tag' || github.ref_name == 'main'
-    needs: [check, security, test]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install tools
-        run: sudo apt-get update && sudo apt-get install -y xz-utils
-      - name: Set version from tag
-        if: github.ref_type == 'tag'
-        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
-      - name: Build plugin
-        run: ./build.sh
       - uses: actions/upload-artifact@v4
         with:
           name: dist

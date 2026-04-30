@@ -3,7 +3,7 @@ mxsend:
 mxsend: A command-line tool to send messages to Matrix rooms.
 mxsend: Used as an Unraid notification agent.
 mxsend:
-mxsend: https://gitlab.com/adminelix/mxsend
+mxsend: https://github.com/adminelix/mxsend
 mxsend:
 mxsend: This package includes the mxsend binary, the Mxsend
 mxsend: notification agent XML, and a Matrix icon for Unraid's

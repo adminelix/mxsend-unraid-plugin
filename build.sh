@@ -3,12 +3,21 @@ set -euo pipefail
 
 cd "$(cd "$(dirname "$0")" && pwd)"
 
+UNAME_S=$(uname -s)
+if [ "$UNAME_S" = "Linux" ]; then
+  TAR_OWNER="--owner=0 --group=0"
+else
+  TAR_OWNER=""
+fi
+
 NAME="mxsend"
 VERSION="${VERSION:-0.1.0-snapshot.1}"
 ARCH="${ARCH:-x86_64}"
 BUILD="${BUILD:-1}"
 SOURCE_DIR="source"
 DIST_DIR="dist"
+
+MXSEND_VERSION="${MXSEND_VERSION:-v0.1.0-beta.3}"
 
 REPO_NAMESPACE="adminelix"
 REPO_NAME="mxsend-unraid-plugin"
@@ -18,7 +27,7 @@ PKG_NAME="${NAME}-${VERSION}-${ARCH}-${BUILD}"
 PKG_FILE="${PKG_NAME}.txz"
 PLG_FILE="${NAME}.plg"
 
-PLUGIN_URL="https://github.com/${REPO_NAMESPACE}/${REPO_NAME}/releases/latest/download/${PLG_FILE}"
+PLUGIN_URL="${REPO_URL}/releases/latest/download/${PLG_FILE}"
 PACKAGE_URL="${REPO_URL}/releases/download/v${VERSION}/${PKG_FILE}"
 
 echo "=== Building $NAME plugin v$VERSION ==="
@@ -28,12 +37,23 @@ mkdir -p "$DIST_DIR"
 # ── 1. Build Slackware package (.txz) ──────────────────────────────
 echo "Creating Slackware package: $PKG_FILE"
 
-cd "$SOURCE_DIR"
+MXSEND_TARGET="${ARCH}-unknown-linux-gnu"
+MXSEND_BINARY="mxsend-${MXSEND_VERSION}-${MXSEND_TARGET}"
+MXSEND_DEST="${SOURCE_DIR}/usr/local/bin/mxsend"
 
-chmod +x usr/local/bin/mxsend
+if [ ! -f "$MXSEND_DEST" ]; then
+  echo "Downloading mxsend ${MXSEND_VERSION} for ${ARCH}..."
+  mkdir -p "$(dirname "$MXSEND_DEST")"
+  curl -sL "https://github.com/adminelix/mxsend/releases/download/${MXSEND_VERSION}/${MXSEND_BINARY}" \
+    -o "$MXSEND_DEST"
+fi
+chmod +x "$MXSEND_DEST"
+
+cd "$SOURCE_DIR"
 
 tar -cJf "../${DIST_DIR}/${PKG_FILE}" \
   --exclude='.DS_Store' \
+  $TAR_OWNER \
   install/ usr/
 
 cd ..
@@ -76,7 +96,7 @@ cat > "${DIST_DIR}/${PLG_FILE}" << PLGEOF
 
 <CHANGES>
 ### &version;
-- Initial release: Matrix notification agent for Unraid
+See https://github.com/adminelix/mxsend-unraid-plugin/releases for changelog.
 </CHANGES>
 
 <!-- Pre-install: remove stale package files -->
