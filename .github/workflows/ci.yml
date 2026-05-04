@@ -78,16 +78,16 @@ jobs:
           name: dist
           path: dist/
       - uses: orhun/git-cliff-action@v4
-        id: cliff
         with:
           config: cliff.toml
           args: --latest --strip header
         env:
+          OUTPUT: RELEASE_NOTES.md
           GITHUB_REPO: ${{ github.repository }}
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: dist/*
-          body: ${{ steps.cliff.outputs.changelog }}
+          body_path: RELEASE_NOTES.md
           prerelease: ${{ contains(github.ref_name, '-') }}
           update_release: true
