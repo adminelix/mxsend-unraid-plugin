@@ -15,17 +15,14 @@
     ############
     {0}
     ############
-    TITLE=$(printf '%b' "$TITLE")
-    MESSAGE=$(printf '%b' "$MESSAGE")
-    FULL=""
-    [ -n "$TITLE" ]  && FULL="*[$IMPORTANCE] $TITLE*"
-    [ -n "$MESSAGE" ] && FULL="${FULL}\n\n$MESSAGE"
-    RECOVERY_ARGS=""
-    [ -n "$RECOVERY_KEY" ] && [ "$RECOVERY_KEY" != "none" ] && RECOVERY_ARGS="--recovery-key $RECOVERY_KEY"
+    RECOVERY_ARGS=()
+    [ -n "$RECOVERY_KEY" ] && [ "$RECOVERY_KEY" != "none" ] && RECOVERY_ARGS=(--recovery-key "$RECOVERY_KEY")
     /usr/local/bin/mxsend \
       --from "$FROM" --password "$PASSWORD" --to "$TO" \
-      $RECOVERY_ARGS \
-      "$(printf '%b' "$FULL")"
+      "${RECOVERY_ARGS[@]}" \
+      "$(hostname): $TITLE
+
+$MESSAGE"
     ]]>
   </Script>
 </Agent>
