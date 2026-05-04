@@ -5,9 +5,9 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$SCRIPT_DIR"
 
 UNAME_S=$(uname -s)
-TAR_OWNER_ARGS=()
+TAR_OWNER=""
 if [ "$UNAME_S" = "Linux" ]; then
-  TAR_OWNER_ARGS=(--owner=0 --group=0)
+  TAR_OWNER="--owner=0 --group=0"
 fi
 
 NAME="mxsend"
@@ -51,9 +51,10 @@ chmod +x "$MXSEND_DEST"
 
 cd "$SOURCE_DIR"
 
+# shellcheck disable=SC2086
 tar -cJf "../${DIST_DIR}/${PKG_FILE}" \
   --exclude='.DS_Store' \
-  "${TAR_OWNER_ARGS[@]}" \
+  $TAR_OWNER \
   install/ usr/
 
 cd ..
