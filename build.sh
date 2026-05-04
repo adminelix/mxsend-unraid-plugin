@@ -91,6 +91,7 @@ cat > "${DIST_DIR}/${PLG_FILE}" << PLGEOF
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;"
         pluginURL="&pluginURL;"
+        icon="mxsend.png"
         min="6.12.0"
         support="https://github.com/adminelix/mxsend-unraid-plugin"
         project="https://github.com/adminelix/mxsend-unraid-plugin">
