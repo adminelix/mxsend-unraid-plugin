@@ -11,8 +11,9 @@
   </Variables>
   <Script>
     <![CDATA[
-    #!/bin/bash
+#!/bin/bash
     ############
+    # shellcheck disable=SC1073,SC1054,SC1083,SC1056,SC1072
     {0}
     ############
     TITLE=$(printf '%b' "$TITLE")

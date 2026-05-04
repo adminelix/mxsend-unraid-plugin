@@ -64,7 +64,7 @@ jobs:
           path: dist/
 
   release:
-    needs: [build]
+    needs: [check, build]
     if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     permissions:
