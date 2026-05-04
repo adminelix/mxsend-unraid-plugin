@@ -1,8 +1,25 @@
-# mxsend — Unraid Notification Agent for Matrix
+[![Release](https://img.shields.io/github/v/release/adminelix/mxsend-unraid-plugin?style=flat-square)](https://github.com/adminelix/mxsend-unraid-plugin/releases/latest)
+[![CI](https://img.shields.io/github/actions/workflow/status/adminelix/mxsend-unraid-plugin/ci.yml?branch=main&style=flat-square)](https://github.com/adminelix/mxsend-unraid-plugin/actions)
 
-Send Unraid system notifications to a Matrix room via [mxsend](https://github.com/adminelix/mxsend).
+# mxsend-unraid-plugin
+
+> Unofficial Unraid plugin for Matrix notifications via [mxsend](https://github.com/adminelix/mxsend).
+
+This plugin packages mxsend as an Unraid notification agent. Install it, configure your Matrix credentials in the Unraid WebUI, and receive system alerts directly in a Matrix room.
+
+## Features
+
+- **One-click install** — Paste a plugin URL into Unraid and you're done.
+- **Full WebUI integration** — Configure sender, recipient, title, and E2EE recovery key from **Settings → Notification Settings**.
+- **Encryption support** — Optional end-to-end encryption via Matrix recovery key.
+- **Slackware package** — Ships as a proper `.txz` package via `upgradepkg` for clean install and removal.
 
 ## Installation
+
+### Prerequisites
+
+- Unraid 6.12.0 or later
+- A Matrix account on any homeserver
 
 ### Via Plugin URL (recommended)
 
@@ -29,30 +46,72 @@ The plugin automatically downloads the required package from the latest GitHub r
    plugin install /boot/config/plugins/mxsend/mxsend.plg
    ```
 
+### Build from source
+
+Requirements: `bash`, `tar`, `xz`, `curl`, `sha256sum` (or `shasum`)
+
+```bash
+git clone git@github.com:adminelix/mxsend-unraid-plugin.git
+cd mxsend-unraid-plugin
+make build
+```
+
+Output files land in `dist/`. Override the package version:
+
+```bash
+VERSION=0.2.0 ./build.sh
+```
+
 ## Configuration
+
+### Notification agent settings
 
 1. Go to **Settings → Notification Settings → Notification Agents**
 2. Scroll to the **Mxsend** section
 3. Fill in:
 
-   | Field | Description | Example |
-   |-------|-------------|---------|
-   | Sender (From) | Full Matrix user ID | `@bot:matrix.server.org` |
-   | Password | Account password. **Avoid `#` and `;`** — Unraid's config parser treats them as comment delimiters, causing all fields to appear blank after saving. | `s3cret` |
-   | Recipient (To) | Room ID or user ID | `!abc123:matrix.server.org` |
-   | Recovery Key | E2EE key (optional) | |
-   | Title | Fields for the message title | `$EVENT` |
-   | Message | Fields for the message body | `$SUBJECT,$DESCRIPTION` |
+   | Field | Description | Default | Example |
+   |-------|-------------|---------|---------|
+   | Sender (From) | Full Matrix user ID | — | `@bot:matrix.server.org` |
+   | Password | Account password | — | `s3cret` |
+   | Recipient (To) | Room ID or user ID | — | `!abc123:matrix.server.org` |
+   | Recovery Key | E2EE device recovery key (set to `none` to disable encryption) | `none` | |
+   | Title | Fields for the message title | `$SUBJECT` | `$EVENT` |
+   | Message | Fields for the message body | `$DESCRIPTION` | `$SUBJECT,$DESCRIPTION` |
+
+   > **Warning:** Avoid `#` and `;` in the **Password** field — Unraid's INI-style config parser treats them as comment delimiters, causing all fields to appear blank after saving.
 
 4. Set **Agent function** to **Enabled**
 5. Click **Apply**, then **Test**
 
-## Enabling Notifications
+### Enabling notifications
 
 In **Settings → Notification Settings**, check the **Agents** box for each importance level:
 - **Alert** — critical events
 - **Warning** — important events
 - **Notice** — informational events
+
+## Troubleshooting
+
+### Password contains `#` or `;`
+
+Unraid's config parser interprets these as comments. If you must use them, generate an app-specific password that avoids these characters, or use a password manager to create one.
+
+### Agent not appearing in Notification Agents list
+
+- Refresh the Unraid WebUI (Ctrl+F5)
+- Verify the plugin installed successfully under **Plugins**
+- Reinstall the plugin if the agent XML was not deployed
+
+### Connection failures
+
+- Verify the Matrix homeserver is reachable from your Unraid server
+- Confirm credentials are correct via the **Test** button
+- Check Unraid's system log (`/var/log/syslog`) for mxsend error output
+
+### End-to-end encryption issues
+
+If your Matrix server requires E2EE, the first message sent will attempt device verification. Set **Recovery Key** to the device recovery key from your Matrix client. Set it to `none` (or leave blank) to skip encryption.
 
 ## Uninstallation
 
@@ -63,37 +122,25 @@ plugin remove mxsend
 rm -rf /boot/config/plugins/mxsend
 ```
 
-## Building from Source
-
-Requirements: `bash`, `tar`, `xz`, `curl`, `sha256sum` (or `shasum`)
+## Development
 
 ```bash
-git clone git@github.com:adminelix/mxsend-unraid-plugin.git
-cd mxsend-unraid-plugin
-./build.sh
+# Build the plugin
+make build
+
+# Lint shell scripts with shellcheck
+make lint
+
+# Clean build artifacts
+make clean
 ```
 
-Output files land in `dist/`.
+## Contributing
 
-## Release Process
+Pull requests are welcome. This project uses [conventional commits](https://www.conventionalcommits.org/) and passes shellcheck on all shell scripts.
 
-This project uses [conventional commits](https://www.conventionalcommits.org/) and
-[git-cliff](https://github.com/orhun/git-cliff) for changelog generation.
+## Project
 
-To create a release:
-
-```bash
-# 1. Bump version in build.sh
-# 2. Commit changes
-git commit -m "chore: release v0.1.0"
-
-# 3. Tag and push
-git tag v0.1.0
-git push origin main --tags
-
-# 4. CI builds and creates a GitHub Release automatically
-```
-
-## License
-
-This plugin bundles [mxsend](https://github.com/adminelix/mxsend) under its own license.
+- **Repository:** https://github.com/adminelix/mxsend-unraid-plugin
+- **Releases:** https://github.com/adminelix/mxsend-unraid-plugin/releases
+- **mxsend:** https://github.com/adminelix/mxsend
