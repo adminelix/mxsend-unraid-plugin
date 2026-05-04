@@ -11,9 +11,9 @@ else
 fi
 
 NAME="mxsend"
-VERSION="${VERSION:-0.1.0-snapshot.1}"
+VERSION="${VERSION:-0.1.0-beta.1}"
 ARCH="${ARCH:-x86_64}"
-BUILD="${BUILD:-1}"
+BUILD="${BUILD:-4}"
 SOURCE_DIR="source"
 DIST_DIR="dist"
 
