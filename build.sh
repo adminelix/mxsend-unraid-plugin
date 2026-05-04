@@ -4,10 +4,9 @@ set -euo pipefail
 cd "$(cd "$(dirname "$0")" && pwd)"
 
 UNAME_S=$(uname -s)
+TAR_OWNER=""
 if [ "$UNAME_S" = "Linux" ]; then
   TAR_OWNER="--owner=0 --group=0"
-else
-  TAR_OWNER=""
 fi
 
 NAME="mxsend"
@@ -51,6 +50,7 @@ chmod +x "$MXSEND_DEST"
 
 cd "$SOURCE_DIR"
 
+# shellcheck disable=SC2086
 tar -cJf "../${DIST_DIR}/${PKG_FILE}" \
   --exclude='.DS_Store' \
   $TAR_OWNER \
@@ -58,7 +58,7 @@ tar -cJf "../${DIST_DIR}/${PKG_FILE}" \
 
 cd ..
 
-echo "Package created: $(ls -lh ${DIST_DIR}/${PKG_FILE} | awk '{print $5}')"
+echo "Package created: $(du -sh "${DIST_DIR}/${PKG_FILE}" | awk '{print $1}')"
 
 # ── 2. Calculate SHA256 ─────────────────────────────────────────────
 if command -v sha256sum &>/dev/null; then
