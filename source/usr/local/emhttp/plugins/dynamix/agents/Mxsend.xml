@@ -15,6 +15,8 @@
     ############
     {0}
     ############
+    TITLE=$(printf '%b' "$TITLE")
+    MESSAGE=$(printf '%b' "$MESSAGE")
     RECOVERY_ARGS=()
     [ -n "$RECOVERY_KEY" ] && [ "$RECOVERY_KEY" != "none" ] && RECOVERY_ARGS=(--recovery-key "$RECOVERY_KEY")
     /usr/local/bin/mxsend \
