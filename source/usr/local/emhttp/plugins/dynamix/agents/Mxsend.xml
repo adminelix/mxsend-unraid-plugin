@@ -3,7 +3,7 @@
   <Name>Mxsend</Name>
   <Variables>
     <Variable Help="Sender's full Matrix user ID, e.g. @bot:matrix.server.org" Desc="Sender (From)" Default="">FROM</Variable>
-    <Variable Help="Password for the Matrix account" Desc="Password" Default="">PASSWORD</Variable>
+    <Variable Help="Password for the Matrix account. Avoid characters that Unraid treats as INI comments: # and ; — they will break config display." Desc="Password" Default="">PASSWORD</Variable>
     <Variable Help="Recipient — a room ID (!room:server) or user ID (@user:server)" Desc="Recipient (To)" Default="">TO</Variable>
     <Variable Help="Recovery key for E2EE device verification (set to 'none' to disable)" Desc="Recovery Key" Default="none">RECOVERY_KEY</Variable>
     <Variable Help="Fields included in the notification title" Desc="Notification Title" Default="$SUBJECT">TITLE</Variable>

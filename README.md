@@ -38,7 +38,7 @@ The plugin automatically downloads the required package from the latest GitHub r
    | Field | Description | Example |
    |-------|-------------|---------|
    | Sender (From) | Full Matrix user ID | `@bot:matrix.server.org` |
-   | Password | Account password | `s3cret` |
+   | Password | Account password. **Avoid `#` and `;`** — Unraid's config parser treats them as comment delimiters, causing all fields to appear blank after saving. | `s3cret` |
    | Recipient (To) | Room ID or user ID | `!abc123:matrix.server.org` |
    | Recovery Key | E2EE key (optional) | |
    | Title | Fields for the message title | `$EVENT` |
