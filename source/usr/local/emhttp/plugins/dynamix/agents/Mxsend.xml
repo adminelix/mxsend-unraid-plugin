@@ -5,9 +5,9 @@
     <Variable Help="Sender's full Matrix user ID, e.g. @bot:matrix.server.org" Desc="Sender (From)" Default="">FROM</Variable>
     <Variable Help="Password for the Matrix account" Desc="Password" Default="">PASSWORD</Variable>
     <Variable Help="Recipient — a room ID (!room:server) or user ID (@user:server)" Desc="Recipient (To)" Default="">TO</Variable>
-    <Variable Help="Recovery key for E2EE device verification (optional)" Desc="Recovery Key (optional)" Default="none">RECOVERY_KEY</Variable>
-    <Variable Help="Fields included in the notification title" Desc="Notification Title" Default="$EVENT">TITLE</Variable>
-    <Variable Help="Fields included in the notification message body" Desc="Notification Message" Default="$SUBJECT,$DESCRIPTION">MESSAGE</Variable>
+    <Variable Help="Recovery key for E2EE device verification (optional)" Desc="Recovery Key (optional)" Default="">RECOVERY_KEY</Variable>
+    <Variable Help="Fields included in the notification title" Desc="Notification Title" Default="$SUBJECT">TITLE</Variable>
+    <Variable Help="Fields included in the notification message body" Desc="Notification Message" Default="$DESCRIPTION">MESSAGE</Variable>
   </Variables>
   <Script>
     <![CDATA[
@@ -19,7 +19,7 @@
     TITLE=$(printf '%b' "$TITLE")
     MESSAGE=$(printf '%b' "$MESSAGE")
     RECOVERY_ARGS=()
-    [ -n "$RECOVERY_KEY" ] && [ "$RECOVERY_KEY" != "none" ] && RECOVERY_ARGS=(--recovery-key "$RECOVERY_KEY")
+    [ -n "$RECOVERY_KEY" ] && RECOVERY_ARGS=(--recovery-key "$RECOVERY_KEY")
     /usr/local/bin/mxsend \
       --from "$FROM" --password "$PASSWORD" --to "$TO" \
       "${RECOVERY_ARGS[@]}" \
