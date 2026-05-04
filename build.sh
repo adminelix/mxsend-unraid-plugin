@@ -17,7 +17,7 @@ BUILD="${BUILD:-1}"
 SOURCE_DIR="source"
 DIST_DIR="dist"
 
-MXSEND_VERSION="${MXSEND_VERSION:-v0.1.0-beta.3}"
+MXSEND_VERSION="${MXSEND_VERSION:-v0.1.0-beta.2}"
 
 REPO_NAMESPACE="adminelix"
 REPO_NAME="mxsend-unraid-plugin"
@@ -38,7 +38,7 @@ mkdir -p "$DIST_DIR"
 echo "Creating Slackware package: $PKG_FILE"
 
 MXSEND_TARGET="${ARCH}-unknown-linux-gnu"
-MXSEND_BINARY="mxsend-${MXSEND_VERSION}-${MXSEND_TARGET}"
+MXSEND_BINARY="mxsend-${MXSEND_TARGET}"
 MXSEND_DEST="${SOURCE_DIR}/usr/local/bin/mxsend"
 
 if [ ! -f "$MXSEND_DEST" ]; then
