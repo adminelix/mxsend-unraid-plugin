@@ -11,9 +11,9 @@ if [ "$UNAME_S" = "Linux" ]; then
 fi
 
 NAME="mxsend"
-VERSION="${VERSION:-0.1.0-beta.1}"
+VERSION="${VERSION:-0.1.0-beta.2}"
 ARCH="${ARCH:-x86_64}"
-BUILD="${BUILD:-4}"
+BUILD="${BUILD:-2}"
 SOURCE_DIR="source"
 DIST_DIR="dist"
 
