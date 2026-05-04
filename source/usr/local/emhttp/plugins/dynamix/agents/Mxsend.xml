@@ -20,9 +20,7 @@
     /usr/local/bin/mxsend \
       --from "$FROM" --password "$PASSWORD" --to "$TO" \
       "${RECOVERY_ARGS[@]}" \
-      "$(hostname): $TITLE
-
-$MESSAGE"
+      "$(printf '%s: %s\n\n%s' "$(hostname)" "$TITLE" "$MESSAGE")"
     ]]>
   </Script>
 </Agent>
