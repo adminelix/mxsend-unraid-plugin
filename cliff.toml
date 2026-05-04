@@ -2,7 +2,15 @@
 header = "# Changelog\n"
 body = """
 {% for group, commits in commits | group_by(attribute="group") %}
-{% if group == "Features" or group == "Bug Fixes" %}
+{% if group == "Features" %}
+### {{ group | upper_first }}
+{% for commit in commits %}
+- {{ commit.message }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% for group, commits in commits | group_by(attribute="group") %}
+{% if group == "Bug Fixes" %}
 ### {{ group | upper_first }}
 {% for commit in commits %}
 - {{ commit.message }}
@@ -43,6 +51,7 @@ commit_parsers = [
     { message = "^refactor", group = "Refactor" },
     { message = "^style", group = "Styling" },
     { message = "^test", group = "Testing" },
+    { message = "^build", group = "Build" },
     { message = "^ci", group = "CI" },
     { message = "^chore", group = "Chores" },
 ]
