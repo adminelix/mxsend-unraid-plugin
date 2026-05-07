@@ -16,14 +16,15 @@
     ############
     {0}
     ############
-    TITLE=$(printf '%b' "$TITLE")
-    MESSAGE=$(printf '%b' "$MESSAGE")
-    RECOVERY_ARGS=()
-    [ "$RECOVERY_KEY" != "none" ] && RECOVERY_ARGS=(--recovery-key "$RECOVERY_KEY")
-    /usr/local/bin/mxsend \
-      --from "$FROM" --password "$PASSWORD" --to "$TO" \
-      "${RECOVERY_ARGS[@]}" \
-      "$(printf '%s: %s\n\n%s' "$(hostname)" "$TITLE" "$MESSAGE")"
+export MXSEND_FROM="$FROM"
+export MXSEND_PASSWORD="$PASSWORD"
+export MXSEND_TO="$TO"
+if [ "$RECOVERY_KEY" != "none" ]; then
+  export MXSEND_RECOVERY_KEY="$RECOVERY_KEY"
+fi
+
+MESSAGE_BODY="$(echo -e "**$(hostname)** — $TITLE\n\n$MESSAGE")"
+/usr/local/bin/mxsend "$MESSAGE_BODY"
     ]]>
   </Script>
 </Agent>
