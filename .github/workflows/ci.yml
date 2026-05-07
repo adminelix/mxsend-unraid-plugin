@@ -89,5 +89,5 @@ jobs:
         with:
           files: dist/*
           body_path: RELEASE_NOTES.md
-          prerelease: ${{ contains(github.ref_name, '-') }}
+          prerelease: true
           update_release: true
