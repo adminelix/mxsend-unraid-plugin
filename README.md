@@ -137,7 +137,7 @@ make clean
 
 ## Contributing
 
-Pull requests are welcome. This project uses [conventional commits](https://www.conventionalcommits.org/) and passes shellcheck on all shell scripts.
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
@@ -160,3 +160,4 @@ which is also dual-licensed Apache 2.0 / MIT.
 - **Repository:** https://github.com/adminelix/mxsend-unraid-plugin
 - **Releases:** https://github.com/adminelix/mxsend-unraid-plugin/releases
 - **mxsend:** https://github.com/adminelix/mxsend
+- **Release process:** See [RELEASE.md](RELEASE.md)
