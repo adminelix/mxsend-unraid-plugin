@@ -1,4 +1,8 @@
 # Changelog
+## [v2026.05.18] - 2026-05-18
+
+### Features
+- switch to date-based versioning scheme
 ## [v0.1.0] - 2026-05-11
 
 ### Features
@@ -44,6 +48,7 @@
 - remove unused pre-commit config and simplify release prerelease flag
 - add Dependabot config for GitHub Actions (monthly)
 - prepare v0.1.0-beta.5
+- prepare v0.1.0
 
 ### Documentation
 - warn about # and ; in password field
