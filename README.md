@@ -59,7 +59,7 @@ make build
 Output files land in `dist/`. Override the package version:
 
 ```bash
-VERSION=0.2.0 ./build.sh
+VERSION=2026.05.18 ./build.sh
 ```
 
 ## Configuration

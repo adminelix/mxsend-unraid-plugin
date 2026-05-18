@@ -12,14 +12,14 @@ Three version variables in `build.sh`:
 
 | Variable | Line | Description | Example |
 |----------|------|-------------|---------|
-| `VERSION` | 13 | Plugin version (SemVer) | `0.2.0` |
-| `BUILD` | 14 | Slackware package build number (bump when repackaging same version) | `2` |
-| `MXSEND_VERSION` | 17 | Bundled mxsend binary tag | `v0.1.0` |
+| `VERSION` | 15 | Plugin version (date-based, `YYYY.MM.DD`) | `2026.05.18` |
+| `BUILD` | 17 | Slackware package build number (bump when repackaging same version) | `2` |
+| `MXSEND_VERSION` | 21 | Bundled mxsend binary tag | `v0.1.1` |
 
 All three can be overridden via environment variables:
 
 ```bash
-VERSION=0.2.0 BUILD=2 MXSEND_VERSION=v0.1.0 ./build.sh
+VERSION=2026.05.18 BUILD=2 MXSEND_VERSION=v0.1.1 ./build.sh
 ```
 
 ## Steps
@@ -35,7 +35,7 @@ git checkout -b release/v<VERSION>
 
 ### 2. Bump versions
 
-Update `VERSION`, `BUILD`, and `MXSEND_VERSION` in `build.sh`. Remove any `-beta.N` suffix from `VERSION` for a stable release.
+Update `VERSION`, `BUILD`, and `MXSEND_VERSION` in `build.sh`. Remove any `.0-beta.N` suffix from `VERSION` for a stable release.
 
 ### 3. Update changelog
 
@@ -104,8 +104,8 @@ git push origin --delete release/v<VERSION>
 
 ## Notes
 
-- **Versioning**: This project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-- **Beta / pre-release tags**: Tags like `v0.2.0-beta.1` are ignored by `git-cliff` — the `tag_pattern` in `cliff.toml` only matches stable semver (`vX.Y.Z`), so they don't appear in the changelog. A beta tag push still triggers the CI pipeline and creates a pre-release.
+- **Versioning**: This project uses date-based versioning (`YYYY.MM.DD` for stable, `YYYY.MM.DD.0-beta.N` for pre-releases). The `.0` before the `-beta.N` suffix is required so PHP's `version_compare` correctly identifies the stable release as newer than its pre-release candidates.
+- **Beta / pre-release tags**: Tags like `v2026.05.18.0-beta.1` are ignored by `git-cliff` — the `tag_pattern` in `cliff.toml` only matches stable versions (`vYYYY.MM.DD`), so they don't appear in the changelog. A beta tag push still triggers the CI pipeline and creates a pre-release.
 - **Install URLs**: The PLG embeds `releases/latest/download/` as the `pluginURL`, but `releases/download/v{VERSION}/` for the TXZ — don't confuse them.
 - **macOS builds**: `build.sh` uses `tar -cJf` with `--exclude='.DS_Store'`; the `--owner`/`--group` flags don't work on BSD tar — omit them if running locally.
 - **Changelog**: Maintained in `CHANGELOG.md` using the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format, auto-generated via [`git-cliff`](https://git-cliff.github.io/). Do not edit manually.
