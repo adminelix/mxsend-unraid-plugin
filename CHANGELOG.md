@@ -1,4 +1,13 @@
 # Changelog
+## [v2026.06.05] - 2026-06-05
+
+### Bug Fixes
+- switch mxsend download target from linux-gnu to linux-musl
+
+### Chores
+- bump mxsend to v0.2.0
+- prepare v2026.06.05
+
 ## [v2026.05.18] - 2026-05-18
 
 ### Features

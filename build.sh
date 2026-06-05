@@ -12,13 +12,13 @@ if [ "$UNAME_S" = "Linux" ]; then
 fi
 
 NAME="mxsend"
-VERSION="${VERSION:-2026.05.18}"
+VERSION="${VERSION:-2026.06.05}"
 ARCH="${ARCH:-x86_64}"
 BUILD="${BUILD:-1}"
 SOURCE_DIR="source"
 DIST_DIR="dist"
 
-MXSEND_VERSION="${MXSEND_VERSION:-v0.1.1}"
+MXSEND_VERSION="${MXSEND_VERSION:-v0.2.0}"
 
 REPO_NAMESPACE="adminelix"
 REPO_NAME="mxsend-unraid-plugin"
@@ -38,7 +38,7 @@ mkdir -p "$DIST_DIR"
 # ── 1. Build Slackware package (.txz) ──────────────────────────────
 echo "Creating Slackware package: $PKG_FILE"
 
-MXSEND_TARGET="${ARCH}-unknown-linux-gnu"
+MXSEND_TARGET="${ARCH}-unknown-linux-musl"
 MXSEND_BINARY="mxsend-${MXSEND_TARGET}"
 MXSEND_DEST="${SOURCE_DIR}/usr/local/bin/mxsend"
 
