@@ -1,17 +1,35 @@
 # Changelog
-## [v2026.06.05] - 2026-06-05
+## [v2026.07.24] - 2026-07-24
 
-### Bug Fixes
-- switch mxsend download target from linux-gnu to linux-musl
+<details>
+<summary>Other</summary>
 
 ### Chores
-- bump mxsend to v0.2.0
+- bump mxsend to v0.2.1
+- prepare v2026.07.24
+</details>
+
+## [v2026.06.05] - 2026-06-05
+
+<details>
+<summary>Other</summary>
+
+### Chores
 - prepare v2026.06.05
+</details>
 
 ## [v2026.05.18] - 2026-05-18
 
 ### Features
 - switch to date-based versioning scheme
+
+<details>
+<summary>Other</summary>
+
+### Chores
+- prepare v2026.05.18
+</details>
+
 ## [v0.1.0] - 2026-05-11
 
 ### Features
