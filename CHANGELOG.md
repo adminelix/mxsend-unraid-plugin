@@ -1,4 +1,17 @@
 # Changelog
+## [v2026.10.25] - 2026-10-25
+
+<details>
+<summary>Other</summary>
+
+### Chores
+- bump actions/checkout from 6 to 7
+- prepare v2026.10.25
+
+### Documentation
+- fix changelog generation step in release process
+</details>
+
 ## [v2026.07.24] - 2026-07-24
 
 <details>
