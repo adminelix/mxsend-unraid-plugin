@@ -37,24 +37,33 @@ git checkout -b release/v<VERSION>
 
 Update `VERSION`, `BUILD`, and `MXSEND_VERSION` in `build.sh`. Remove any `.0-beta.N` suffix from `VERSION` for a stable release.
 
-### 3. Update changelog
-
-Generate the changelog entry for the new version from conventional commits:
+Commit the version bump — the changelog step needs this commit to exist so the new section includes it:
 
 ```bash
-git cliff --bump -o CHANGELOG.md
-```
-
-Review the diff — the version section header and date are generated automatically.
-
-### 4. Commit
-
-```bash
-git add build.sh CHANGELOG.md
+git add build.sh
 git commit -m "chore: prepare v<VERSION>"
 ```
 
-### 5. Tag and push
+### 3. Update changelog
+
+Prepend the new version section to `CHANGELOG.md`:
+
+```bash
+git cliff --unreleased --tag v<VERSION> --prepend
+```
+
+This renders the section for all commits since the last tag (version header, date, grouped commits) and inserts it below the existing `# Changelog` header without duplicating it. Review the diff before continuing.
+
+Fold the changelog into the prepare commit:
+
+```bash
+git add CHANGELOG.md
+git commit --amend --no-edit
+```
+
+> **Note:** Do not use `git cliff --bump -o CHANGELOG.md`. `--bump` computes the next version by semver-bumping the previous tag, which is incompatible with the date-based versioning scheme: the semver crate rejects both the `v` tag prefix and leading zeros (any month or day 01–09), and even when a tag happens to parse, a semver patch bump is not today's date. It also truncates `CHANGELOG.md` before failing — restore it with `git restore CHANGELOG.md` if that happens.
+
+### 4. Tag and push
 
 Create the tag on the release branch and push both branch and tag:
 
@@ -64,7 +73,7 @@ git push origin release/v<VERSION>
 git push origin v<VERSION>
 ```
 
-### 6. CI creates a pre-release
+### 5. CI creates a pre-release
 
 The tag push triggers the pipeline (`.github/workflows/ci.yml`):
 
@@ -74,26 +83,26 @@ The tag push triggers the pipeline (`.github/workflows/ci.yml`):
 
 All tag-pushed releases start as pre-releases, regardless of tag name.
 
-### 7. Open a pull request
+### 6. Open a pull request
 
 Open a PR from `release/v<VERSION>` to `main`. The PR contains the version bump and changelog update. Use the pre-release page on GitHub to verify the generated release notes and attached artifacts.
 
-### 8. Review
+### 7. Review
 
 - Review the PR diff (version bump, changelog entries).
 - Review the pre-release page (release notes formatting, artifacts).
 
-### 9. Merge
+### 8. Merge
 
 Merge the PR to `main`. The tag remains on the release branch commit — it is an ancestor of `main` through the merge and stays valid.
 
-### 10. Publish the release
+### 9. Publish the release
 
 1. Go to [Releases](https://github.com/adminelix/mxsend-unraid-plugin/releases).
 2. Find the pre-release, click **Edit**.
 3. Click **Publish release** to promote it to a full release.
 
-### 11. Clean up
+### 10. Clean up
 
 Delete the release branch:
 
