@@ -12,13 +12,13 @@ if [ "$UNAME_S" = "Linux" ]; then
 fi
 
 NAME="mxsend"
-VERSION="${VERSION:-2026.07.24}"
+VERSION="${VERSION:-2026.10.25}"
 ARCH="${ARCH:-x86_64}"
 BUILD="${BUILD:-1}"
 SOURCE_DIR="source"
 DIST_DIR="dist"
 
-MXSEND_VERSION="${MXSEND_VERSION:-v0.2.1}"
+MXSEND_VERSION="${MXSEND_VERSION:-v0.2.3}"
 
 REPO_NAMESPACE="adminelix"
 REPO_NAME="mxsend-unraid-plugin"
